@@ -52,6 +52,11 @@ export class UserService {
     return this.userRepository.findOneBy({ name });
   }
 
+  viewUserByemail(email: string): Promise<User> {
+    console.log("viewUserByemail ", email)
+    return this.userRepository.findOneBy({ email });
+  }
+
   /**
    * this function is used to updated specific user whose id is passed in
    * parameter along with passed updated data

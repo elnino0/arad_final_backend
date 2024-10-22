@@ -1,8 +1,9 @@
 
 
 import { Prodacts } from 'src/prodacts/prodacts.entity';
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, Unique } from 'typeorm';
 
+@Unique(["name"]) 
 @Entity()
 export class Categoires {
   @PrimaryGeneratedColumn()
@@ -11,6 +12,6 @@ export class Categoires {
   @Column()
   name: string;
 
-  @OneToMany(type => Prodacts, project => project.cat) projects: Prodacts[];  
+  @OneToMany(type => Prodacts, project => project.cat) prodacts: Prodacts[];  
 
 }

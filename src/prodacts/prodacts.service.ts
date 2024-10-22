@@ -13,24 +13,33 @@ export class ProdactsService {
     private readonly categoiresRepository: Repository<Categoires>,
   ) {}
 
-  async createProdact(catid:number, name: string, cat: string, price:string, link:string, des:string): Promise<Prodacts> {
+  async createProdact(name: string, cat: string, price:string, link:string, des:string): Promise<Prodacts> {
 
     let categoiry = await this.categoiresRepository.findOne(      {
       where: {
-          id: catid,
+          name:cat,
       },
   })
   
-  if(!categoiry){
-    categoiry = this.categoiresRepository.create({name})
-  }
+  console.log("createProdact categoiry", categoiry)
+  const prodact = this.prodactsRepository.create({ name, cat, price, link, des });
 
-    const prodact = this.prodactsRepository.create({ name, cat, price, link, des });
+    if(!categoiry){
+      const entity = new Categoires()
+      entity.name = cat
+      categoiry = await this.categoiresRepository.save(entity)
+    }
     prodact.categoiry = categoiry
+    console.log("createProdact",prodact)
     return this.prodactsRepository.save(prodact);
   }
 
   async getAllProdact(): Promise<Prodacts[]> {
     return this.prodactsRepository.find();
   }
+
+  updateProdacts(prodact: Prodacts ): Promise<Prodacts> {
+    return this.prodactsRepository.save(prodact);
+  }
+
 }

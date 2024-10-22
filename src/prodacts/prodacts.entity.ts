@@ -23,7 +23,13 @@ export class Prodacts {
   @Column()
   des: string;
 
-  @ManyToOne(type => Categoires, categoires => categoires.projects) categoiry: Categoires; 
+  @ManyToOne(type => Categoires, categoires => categoires.prodacts,  {
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE",
+    nullable: false,
+    // triggers the delete when the entity was removed from the order.details.
+    orphanedRowAction: "delete",
+  }) categoiry: Categoires; 
 
 }
 
