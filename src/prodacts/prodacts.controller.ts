@@ -27,4 +27,10 @@ export class ProdactsController {
   update(@Body() prodacts: Prodacts) {
     return this.prodactService.updateProdacts(prodacts);
   }
+
+  @Roles(Role.Admin,Role.User)
+  @Get("/user")
+  userProdacts() {
+    return this.prodactService.getProdactsForUsers();
+  }
 }

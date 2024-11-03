@@ -27,6 +27,7 @@ import { Public } from './decorators/public.decorator';
     @UseGuards(AuthGuard)
     @Get('profile')
     getProfile(@Request() req) {
+      console.log("req.user",req.user)
       return req.user;
     }
   }

@@ -16,8 +16,16 @@ export class Purchases {
   prodactId:Number
   @Column()
   date:string
+  @Column()
+  price:string
+  @Column()
+  ishide:boolean
 
-  @ManyToOne(() => Customers, (customer) => customer.purchases)
+  @ManyToOne(() => Customers, (customer) => customer.purchases,  {
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE",
+    nullable: false,
+  })
   customer: Customers;
 
 }

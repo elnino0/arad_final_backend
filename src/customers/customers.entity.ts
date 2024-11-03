@@ -1,8 +1,10 @@
 
 
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, Unique } from 'typeorm';
 import { Purchases } from 'src/purchases/purchases.entity';
 
+
+@Unique(["email"]) 
 @Entity()
 export class Customers {
   @PrimaryGeneratedColumn()
@@ -12,7 +14,14 @@ export class Customers {
   name: string;
 
   @Column()
+  email:string
+
+  @Column()
   join: string;
+
+  @Column()
+  ishideorders:boolean;
+
 
   @OneToMany(type => Purchases, project => project.customer) purchases: Purchases[];  
 

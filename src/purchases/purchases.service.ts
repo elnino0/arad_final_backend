@@ -11,7 +11,6 @@ export class PurchasesService {
     private readonly purchaseRepository: Repository<Purchases>,
     @InjectRepository(Customers)
     private readonly customerRepository: Repository<Customers>,
-    private dataSource: DataSource
   ) {}
 
   async createPurchase( customersid:number, quntety:Number, name:string ,prodactId:Number , date:string): Promise<Purchases> {
@@ -31,13 +30,31 @@ export class PurchasesService {
     return this.purchaseRepository.find();
   }
 
-  async getPurchasesByCustomerid(customerId:number): Promise<Purchases[]> {
-    return this.dataSource.createQueryBuilder().select("quntety,name,date").from(Purchases, "purchases")
-    .where("purchases.customerId = :id", { id: customerId }).getMany()
-  }
-
   updateProdacts(purchases: Purchases ): Promise<Purchases> {
     return this.purchaseRepository.save(purchases);
+  }
+
+  
+  async createPurchaseMulti( customer:Customers, orders:Purchases[]): Promise<Purchases[]> {
+
+    const ordersSaved = this.purchaseRepository.create(orders);
+
+    for(let order of ordersSaved){
+      order.ishide = false
+      order.customer = customer
+      await this.purchaseRepository.save(order);
+    }
+    return ordersSaved;
+  }
+
+  async hideOrder(orders:Purchases[],ishide:boolean = true){
+
+    for(let order of orders){
+        order.ishide = ishide
+       await this.purchaseRepository.save(order);
+    }
+
+    return orders
   }
 
 }

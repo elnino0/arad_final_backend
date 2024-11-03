@@ -30,9 +30,6 @@ import {
     @IsEmail(null, { message: 'Please provide valid Email.' })
     email: string;
   
-    @IsInt()
-    age: number;
-  
     @IsString()
     @IsEnum(['admin', 'customer'])
     @NotEquals("admin")
