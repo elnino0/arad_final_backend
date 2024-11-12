@@ -26,7 +26,7 @@
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 nest js with postgres exercise back end for  https://github.com/elnino0/arad_react_final_ex
-after npm i please config and run a postgres instance use the .env to config what you need for the back
+after npm i please config,user and password port and etc, and run a postgres instance use the .env to config what you need for the back
 then use the api for your needs 
 
 
