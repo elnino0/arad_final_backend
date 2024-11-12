@@ -5,7 +5,6 @@ import { Roles } from 'src/guards/decorators/roles.decorator';
 import { Role } from 'src/emun/role.enum';
 import { Customers } from './customers.entity';
 import { Purchases } from 'src/purchases/purchases.entity';
-import { AuthGuard } from 'src/auth/auth.guard';
 
 @UseGuards(RolesGuard)
 @Controller('customer')
@@ -24,10 +23,13 @@ export class CustomerController {
     return this.customerService.getCustomersWithPurches();
   }
 
-  @Roles(Role.Admin)
+  @Roles(Role.Admin,Role.User)
   @Patch()
-  update(@Body() customers: Customers) {
-    return this.customerService.updateCustomers(customers);
+  async update(@Request() request, @Body() customers: Customers) {
+    console.log("update customers ", customers)
+    const customer = await this.customerService.getselfConsumer(request);
+    customer.update(customers)
+    return this.customerService.updateCustomers(customer);
   }
 
   @Roles(Role.Admin,Role.User)
@@ -39,7 +41,6 @@ export class CustomerController {
   @Roles(Role.Admin,Role.User)
   @Post('orders')
   async saveOrders(@Request() request, @Body() orders: Purchases[] ) {
-    console.log("orders",orders)
     const customer = await this.customerService.getselfConsumer(request)
     return this.customerService.saveOrders(customer, orders);
   }

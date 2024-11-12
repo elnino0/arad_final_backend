@@ -7,20 +7,11 @@ import { User } from './entities/user.entity';
 
 @Injectable()
 export class UserService {
-  /**
-   * Here, we have used data mapper approch for this tutorial that is why we
-   * injecting repository here. Another approch can be Active records.
-   */
+
   constructor(
     @InjectRepository(User) private readonly userRepository: Repository<User>,
   ) {}
 
-  /**
-   * this is function is used to create User in User Entity.
-   * @param createUserDto this will type of createUserDto in which
-   * we have defined what are the keys we are expecting from body
-   * @returns promise of user
-   */
   createUser(createUserDto: CreateUserDto): Promise<User> {
     const user: User = new User();
     user.name = createUserDto.name;
@@ -30,19 +21,10 @@ export class UserService {
     return this.userRepository.save(user);
   }
 
-  /**
-   * this function is used to get all the user's list
-   * @returns promise of array of users
-   */
   findAllUser(): Promise<User[]> {
     return this.userRepository.find();
   }
 
-  /**
-   * this function used to get data of use whose id is passed in parameter
-   * @param id is type of number, which represent the id of user.
-   * @returns promise of user
-   */
   viewUser(id: number): Promise<User> {
     return this.userRepository.findOneBy({ id });
   }
@@ -52,32 +34,40 @@ export class UserService {
   }
 
   viewUserByemail(email: string): Promise<User> {
-    console.log("viewUserByemail ", email)
     return this.userRepository.findOneBy({ email });
   }
 
-  /**
-   * this function is used to updated specific user whose id is passed in
-   * parameter along with passed updated data
-   * @param id is type of number, which represent the id of user.
-   * @param updateUserDto this is partial type of createUserDto.
-   * @returns promise of udpate user
-   */
-  updateUser(id: number, updateUserDto: UpdateUserDto): Promise<User> {
+  async updateUser(email:string, updateUserDto: UpdateUserDto): Promise<User> {
+    console.log("updateUser --- ", email)
     const user: User = new User();
-    user.name = updateUserDto.name;
-    user.email = updateUserDto.email;
-    user.password = updateUserDto.password;
-    user.id = id;
+    updateUserDto.name ? user.name = updateUserDto.name : undefined;
+    updateUserDto.email ? user.email = updateUserDto.email : undefined;
+    updateUserDto.password ? user.password = updateUserDto.password : undefined;
+    const userdto = await this.userRepository.findOne({where: {email}})
+    user.id = userdto.id
     return this.userRepository.save(user);
   }
 
-  /**
-   * this function is used to remove or delete user from database.
-   * @param id is the type of number, which represent id of user
-   * @returns nuber of rows deleted or affected
-   */
   removeUser(id: number): Promise<{ affected?: number }> {
     return this.userRepository.delete(id);
   }
+
+  async addAdmin(name:string,email:string,password:string):Promise<User> {
+
+  const admin =  await this.userRepository.findOneBy({ email });
+
+  if(admin){
+    return admin
+  }
+
+    const admindto = new User()
+
+    admindto.email=email
+    admindto.name=name
+    admindto.password = password
+    admindto.role = "admin"
+
+    return this.userRepository.save(admindto)
+  }
+
 }

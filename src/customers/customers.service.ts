@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DataSource, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Customers } from './customers.entity';
 import { PurchasesService } from 'src/purchases/purchases.service';
 import { Purchases } from 'src/purchases/purchases.entity';
@@ -55,6 +55,8 @@ export class CustomerService {
 
   async hideOrders(email: string, ishide:boolean): Promise<Purchases[]> {
     const customer = await this.findCustomerByMail(email)
+    customer.ishideorders = ishide
+    await this.customerRepository.save(customer)
     return this.purchasesService.hideOrder(customer.purchases, ishide)
   }
 

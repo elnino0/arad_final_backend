@@ -18,5 +18,15 @@ export class AuthService {
       access_token: await this.jwtService.signAsync(payload),
       admin:  user.role === Role.Admin
     };
-}
+  }
+
+  async refreshToken(email: string): Promise<any> {
+    const user = await this.usersService.viewUserByemail(email);
+    const payload = { sub: user.role, username: user.email };
+    return {
+      access_token: await this.jwtService.signAsync(payload),
+      admin:  user.role === Role.Admin
+    };
+
+  }
 }

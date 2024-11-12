@@ -19,25 +19,27 @@ import { Purchases } from './purchases/purchases.entity';
 import { AuthController } from './auth/auth.controller';
 import { AuthService } from './auth/auth.service';
 import { AuthModule } from './auth/auth.module';
-
+import { StartupHook } from './startupHook/startup.service';
+import AppConfig from './config';
+AppConfig
 
 @Module({
   imports: [
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      password: 'admin',
-      username: 'eliran',
+      host: AppConfig.POSTGRES_URI,
+      port: AppConfig.POSTGRES_PORT,
+      password: AppConfig.POSTGRES_USER_PASS,
+      username: AppConfig.POSTGRES_USER,
       entities: [User,Prodacts,Categoires,Customers,Purchases],
-      database: 'aradng',
+      database: AppConfig.POSTGRESS_DATABASE,
       synchronize: true,
       logging: true,
     }),
     TypeOrmModule.forFeature([User,Prodacts,Categoires,Customers,Purchases]),
-    UserModule,AuthModule
+    UserModule,AuthModule,
   ],
   controllers: [AppController,ProdactsController,CategoiresController,CustomerController,PurchasesController,AuthController],
-  providers: [AppService,ProdactsService,CategoiresService,CustomerService,PurchasesService,AuthService],
+  providers: [AppService,ProdactsService,CategoiresService,CustomerService,PurchasesService,AuthService,StartupHook],
 })
 export class AppModule {}

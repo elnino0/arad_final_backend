@@ -25,6 +25,13 @@ export class Customers {
 
   @OneToMany(type => Purchases, project => project.customer) purchases: Purchases[];  
 
+  update(customer:Customers){
+    this.name = customer.name ? customer.name : this.name 
+    this.email = customer.email ? customer.email : this.email 
+    this.join = customer.join ? customer.join : this.join 
+    this.ishideorders = customer.ishideorders ? customer.ishideorders : this.ishideorders 
+  }
+
 }
 
 

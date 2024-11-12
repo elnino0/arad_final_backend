@@ -12,6 +12,8 @@ import {
   import { AuthGuard } from './auth.guard';
   import { AuthService } from './auth.service';
 import { Public } from './decorators/public.decorator';
+import { Roles } from 'src/guards/decorators/roles.decorator';
+import { Role } from 'src/emun/role.enum';
   
   @Controller('auth')
   export class AuthController {
@@ -23,11 +25,19 @@ import { Public } from './decorators/public.decorator';
     signIn(@Body() signInDto: Record<string, any>) {
       return this.authService.signIn(signInDto.email, signInDto.password);
     }
+
+    @UseGuards(AuthGuard)
+    @Roles(Role.Admin,Role.User)
+    @Get('token')
+    refreshToken(@Request() req) {
+      const email = req.user.username
+      return this.authService.refreshToken(email)
+    }
   
     @UseGuards(AuthGuard)
+    @Roles(Role.Admin,Role.User)
     @Get('profile')
     getProfile(@Request() req) {
-      console.log("req.user",req.user)
       return req.user;
     }
   }
